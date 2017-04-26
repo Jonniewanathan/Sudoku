@@ -9,7 +9,11 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 
+
+
 public class MainActivity extends AppCompatActivity {
+
+    static final String SUDOKU_PLAY = "SudokuPlayValues";
 
     int[][] sudokuInt;
     int[][] sudokuIntRemoved;
@@ -46,34 +50,40 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sudokuInt = copy2dArray(EasyPuzzles.fullEasy2);
+        sudokuIntRemoved = copy2dArray(EasyPuzzles.easy2);
+
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            sudokuPlayArray = copy2dArray(convertArray2d(savedInstanceState.getIntArray(SUDOKU_PLAY)));
+        }
+        else {
+            sudokuPlayArray = copy2dArray(sudokuIntRemoved);
+        }
+
+
+
         setContentView(R.layout.activity_main);
 
-        sudokuInt = new int[row][column];
-        sudokuIntRemoved = new int[row][column];
-        sudokuPlayArray = new int[row][column];
+//        sudokuInt = new int[row][column];
+//        sudokuIntRemoved = new int[row][column];
+//        sudokuPlayArray = new int[row][column];
 
         isEditable = new boolean[81];
+        textViews = new TextView[81];
 
-//        SudokuUtility.fillSudokuBoard(sudokuInt);
-//
-//        sudokuIntRemoved = sudokuInt.clone();
-//
-//        SudokuUtility.removeNumbersPlayboard(sudokuIntRemoved);
-
-        sudokuInt = EasyPuzzles.fullEasy2.clone();
-        sudokuIntRemoved = EasyPuzzles.easy2.clone();
+//        sudokuInt = EasyPuzzles.fullEasy2.clone();
+//        sudokuIntRemoved = EasyPuzzles.easy2.clone();
+//        sudokuPlayArray = sudokuIntRemoved.clone();
 
         sudokuBoard = (GridView) findViewById(R.id.sudokuBoard);
 
-        sudokuPlayArray = sudokuIntRemoved.clone();
-
-        textAdapter = new TextAdapter(this,sudokuIntRemoved,isEditable,textViews);
+        textAdapter = new TextAdapter(this,sudokuIntRemoved,sudokuPlayArray,isEditable,textViews);
+        //sudokuBoard.setAdapter(new ImageViewAdapter(this,sudokuIntRemoved));
 
         sudokuBoard.setAdapter(textAdapter);
         sudokuBoard.setBackgroundColor(Color.DKGRAY);
-
-        //textViews = textAdapter.getTextViews();
-
 
         one = (Button) findViewById(R.id.button);
         two = (Button) findViewById(R.id.button2);
@@ -85,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
         eight = (Button) findViewById(R.id.button8);
         nine = (Button) findViewById(R.id.button9);
         x = (Button) findViewById(R.id.button10);
+
 
         one.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,9 +243,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+                int rowPosition;
+                int columnPosition;
+                int startRow = 0;
+                int startColumn = 0;
+
                 position = i;
 
-                System.out.println(position);
+                rowPosition = position/9;
+                columnPosition = position%9;
+
+                //System.out.println(position);
 
                 unHighlight();
 
@@ -242,6 +261,34 @@ public class MainActivity extends AppCompatActivity {
                 highLightColumns(position);
 
                 textView = (TextView) view;
+
+                if(columnPosition >= 0 && columnPosition <= 2)
+                {
+                    startColumn = 0;
+                }
+                else if(columnPosition >= 3 && columnPosition <= 5)
+                {
+                    startColumn = 3;
+                }
+                else if(columnPosition >= 6 && columnPosition <= 8)
+                {
+                    startColumn = 6;
+                }
+                if(rowPosition >= 0 && rowPosition <= 2)
+                {
+                    startRow = 0;
+                }
+                else if(rowPosition >= 3 && rowPosition <= 5)
+                {
+                    startRow = 3;
+                }
+                else if(rowPosition >= 6 && rowPosition <= 8)
+                {
+                    startRow = 6;
+                }
+
+                highLight3x3(startRow,startColumn);
+                hightLightSame(textView.getText().toString());
 
                 if(lastView == textView)
                 {
@@ -290,6 +337,8 @@ public class MainActivity extends AppCompatActivity {
 
                     highLightRows(position);
                     highLightColumns(position);
+                    highLight3x3(startRow,startColumn);
+                    hightLightSame(textView.getText().toString());
 
                     if (textView.getText().equals("0"))
                     {
@@ -299,9 +348,10 @@ public class MainActivity extends AppCompatActivity {
                     view.setBackgroundColor(Color.BLUE);
                 }
 
-
             }
         });
+
+
     }
 
     public void highLightRows(int position)
@@ -362,5 +412,120 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+    
+    public void hightLightSame(String number)
+    {
+        for (int i = 0; i < textViews.length; i++) {
+            if(textViews[i].getText().equals(number))
+            {
+                textViews[i].setBackgroundColor(Color.YELLOW);
+                if(textViews[i].getText().equals("0"))
+                {
+                    textViews[i].setTextColor(Color.YELLOW);
+                }
+            }
+        }
+    }
 
+    public void highLight3x3(int row, int col)
+    {
+        int position = row*9+col;
+
+        for (int i = 0; i < 19; i+=9) {
+            for (int j = position+i; j < (position+i+3); j++) {
+                textViews[j].setBackgroundColor(Color.RED);
+                if(textViews[j].getText().equals("0"))
+                {
+                    textViews[j].setTextColor(Color.RED);
+                }
+            }
+        }
+    }
+
+    public int[] convertArray(int[][] playArray)
+    {
+        int[] array = new int[playArray.length*playArray[0].length];
+        int count = 0;
+        for (int i = 0; i < playArray.length; i++) {
+            for (int j = 0; j < playArray[0].length; j++) {
+                array[count] = playArray[i][j];
+                count++;
+            }
+        }
+
+        return array;
+    }
+
+    public int[][] convertArray2d(int[] array)
+    {
+        int[][] array2d = new int[9][9];
+        int count = 0;
+        for (int i = 0; i < array2d.length; i++) {
+            for (int j = 0; j < array2d.length; j++) {
+                array2d[i][j] = array[count];
+                count++;
+            }
+        }
+
+        return array2d;
+    }
+
+    public int[][] copy2dArray(int[][] array)
+    {
+        int[][] array2d = new int[9][9];
+
+        for (int i = 0; i < array2d.length; i++) {
+            for (int j = 0; j < array2d.length; j++) {
+                array2d[i][j] = array[i][j];
+            }
+        }
+        return array2d;
+    }
+
+    public String convertToCommaSep(int[][] array)
+    {
+        String data = "";
+        for (int i = 0; i < array.length; i++) {
+            for (int j = 0; j < array[0].length; j++) {
+
+                data += array[i][j];
+                if(i*j != array.length*array[0].length)
+                {
+                    data += ",";
+                }
+
+            }
+        }
+        return data;
+    }
+
+    public static int[][] convertTo2dArray(String string)
+    {
+        String[] separated = string.split(",");
+        int[][] array = new int[9][9];
+        int count = 0;
+
+        for (int i = 0; i < array.length; i++) {
+            for (int j = 0; j < array[0].length; j++) {
+                array[i][j] = Integer.parseInt(separated[count]) ;
+                count++;
+            }
+        }
+        return array;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+
+        savedInstanceState.putIntArray(SUDOKU_PLAY,convertArray(sudokuPlayArray));
+
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        sudokuPlayArray = copy2dArray(convertArray2d(savedInstanceState.getIntArray(SUDOKU_PLAY)));
+    }
 }

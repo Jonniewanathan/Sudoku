@@ -17,27 +17,25 @@ public class TextAdapter extends BaseAdapter {
 
     private Context context;
     private String[][] textViewValues;
+    private String[][] textViewPlayValues;
     private TextView[] textViews;
     private boolean[] isEditable;
     private int rowPosition;
     private int columnPosition;
+    private static int count;
 
 
-    public TextAdapter(Context context, int[][] sudokuValues, boolean[] isEditable,TextView[] textViews) {
+    public TextAdapter(Context context, int[][] sudokuValues, int[][] sudokuPlayvalues, boolean[] isEditable, TextView[] textViews) {
         this.context = context;
         this.textViews = textViews;
         this.isEditable = isEditable;
+        count = 0;
 
         rowPosition = 0;
         columnPosition = 0;
 
-        textViewValues = new String[sudokuValues.length][sudokuValues[0].length];
-
-        for (int i = 0; i < sudokuValues.length; i++) {
-            for (int j = 0; j < sudokuValues[0].length; j++) {
-                textViewValues[i][j] = Integer.toString(sudokuValues[i][j]);
-            }
-        }
+        textViewValues = toStringArray(sudokuValues);
+        textViewPlayValues = toStringArray(sudokuPlayvalues);
 
     }
 
@@ -47,50 +45,67 @@ public class TextAdapter extends BaseAdapter {
 
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        if (convertView == null)
+        if(count < 81)
         {
-            gridView = inflater.inflate(R.layout.text_view_temp, null);
-
-            rowPosition = position/9;
-            columnPosition = position%9;
-
-            // set value into textview
-            textView = (TextView) gridView.findViewById(R.id.sudoku);
-
-            textView.setText(textViewValues[rowPosition][columnPosition]);
-
-            if (textViewValues[rowPosition][columnPosition].equals("0"))
+            if (convertView == null)
             {
-                isEditable[position] = true;
-                textView.setTextColor(Color.GRAY);
-                textView.setTypeface(Typeface.DEFAULT);
+                count++;
+                gridView = inflater.inflate(R.layout.text_view_temp, null);
+
+                rowPosition = position/9;
+                columnPosition = position%9;
+
+                // set value into textview
+                textView = (TextView) gridView.findViewById(R.id.sudoku);
+
+                textView.setText(textViewPlayValues[rowPosition][columnPosition]);
+
+                if (textViewPlayValues[rowPosition][columnPosition].equals("0"))
+                {
+                    isEditable[position] = true;
+                    textView.setTextColor(Color.GRAY);
+                    textView.setTypeface(Typeface.DEFAULT);
+                }
+                else if(!textViewPlayValues[rowPosition][columnPosition].equals(textViewValues[rowPosition][columnPosition]))
+                {
+                    isEditable[position] = true;
+                    textView.setTextColor(Color.BLACK);
+                    textView.setTypeface(Typeface.DEFAULT);
+                }
+                else
+                {
+                    isEditable[position] = false;
+                    textView.setTextColor(Color.BLACK);
+                    textView.setTypeface(Typeface.DEFAULT_BOLD);
+                }
+                textView.setBackgroundColor(Color.GRAY);
             }
             else
             {
-                isEditable[position] = false;
-                textView.setTextColor(Color.BLACK);
-                textView.setTypeface(Typeface.DEFAULT_BOLD);
+                textView = (TextView) convertView;
             }
-            textView.setBackgroundColor(Color.GRAY);
+
+            this.textViews[position] = textView;
+            System.out.println("TextView Position: " + position + " Data: " + textView.getText() + "Values: " + textViewValues[rowPosition][columnPosition] + "Play Values: " + textViewPlayValues[rowPosition][columnPosition]);
+            System.out.println("Position: " + position  + " " + this.textViews[position].getText());
+            System.out.println("editable: " + isEditable[position]);
+            //System.out.println("position 0: " + this.textViews[0].getText());
+
+            if(position == 0 && count == 0)
+            {
+                this.textViews[0] = textView;
+            }
         }
         else
         {
-            textView = (TextView) convertView;
+            textView = textViews[position];
         }
-
-        System.out.println("Position: " + position);
-
-        this.textViews[position] = textView;
-        System.out.println(this.textViews[position].getText());
-
-        System.out.println("position 0: " + this.textViews[0].getText());
         return textView;
     }
 
     @Override
     public int getCount() {
-        return (textViewValues.length*textViewValues[0].length);
+        return 81;
     }
 
     @Override
@@ -108,5 +123,17 @@ public class TextAdapter extends BaseAdapter {
         return this.textViews;
     }
 
+    private String[][] toStringArray(int[][] intArray)
+    {
+        String[][] values = new String[intArray.length][intArray[0].length];
+
+        for (int i = 0; i < intArray.length; i++) {
+            for (int j = 0; j < intArray[0].length; j++) {
+                values[i][j] = Integer.toString(intArray[i][j]);
+            }
+        }
+
+        return values;
+    }
 
 }
