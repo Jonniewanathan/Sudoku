@@ -3,8 +3,12 @@ package com.jonniewanathan.sudoku;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteCursorDriver;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQuery;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -16,7 +20,7 @@ import java.util.ArrayList;
 
 public class DBHandler extends SQLiteOpenHelper{
 
-    private static final int DATABASE_VERSION =1;
+    private static final int DATABASE_VERSION =2;
     private static final String DATABASE_NAME= "SudokuPuzzles";
     private static final String TABLE_PUZZLES = "Puzzles";
     private static final String KEY_ID = "Id";
@@ -36,12 +40,30 @@ public class DBHandler extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String CREATE_PUZZLES_TABLE = "CREATE TABLE " + TABLE_PUZZLES+ "("
-        + KEY_ID + " INTEGER PRIMARY KEY," + KEY_ARRAY_NAME + " TEXT,"
-        + KEY_DIFFICULTY + " TEXT," + KEY_PLAYED + " TEXT," + KEY_SHARED_KEY + "TEXT" + ")";
-        db.execSQL(CREATE_PUZZLES_TABLE);
 
 
+
+    }
+
+    public void createTable()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String CREATE_PUZZLES_TABLE = "CREATE TABLE IF NOT EXISTS Puzzles (" +
+                " Id INTEGER PRIMARY KEY, ArrayName CHAR(10), " +
+                " Difficulty CHAR(1), Played CHAR(5) , SharedKey CHAR(10) )";
+
+        System.out.println("Creating Table");
+
+        try{
+            db.execSQL(CREATE_PUZZLES_TABLE);
+            System.out.println("Table Created");
+            db.close();
+        }
+        catch (SQLiteException e)
+        {
+            Log.d("Exception",e.getMessage());
+        }
 
     }
 
@@ -56,15 +78,14 @@ public class DBHandler extends SQLiteOpenHelper{
     {
         //Adding a Puzzle
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(KEY_ARRAY_NAME, puzzle.getArrayName());
-        values.put(KEY_DIFFICULTY, puzzle.getDifficulty());
-        values.put(KEY_PLAYED, puzzle.isPlayed());
-        values.put(KEY_SHARED_KEY, puzzle.getSharedKey());
+
+        String query = "INSERT INTO " + TABLE_PUZZLES +" ( "+ KEY_ID + " , " + KEY_ARRAY_NAME  + " , " + KEY_DIFFICULTY +
+                ", " + KEY_PLAYED + " , " + KEY_SHARED_KEY + " )" +
+                " VALUES ( " + puzzle.getId() + ", '" + puzzle.getArrayName() + "', '" + puzzle.getDifficulty() +  "' , '" +
+                puzzle.isPlayed() + "' , '" + puzzle.getSharedKey() + "' )";
 
 
-        //Inserting into the database
-        db.insert(TABLE_PUZZLES,null,values);
+        db.execSQL(query);
         db.close();
     }
 
@@ -87,20 +108,16 @@ public class DBHandler extends SQLiteOpenHelper{
 
     public int getNumberOfPuzzles()
     {
-        String query = "SELECT Count(ID) FROM " + TABLE_PUZZLES;
+        int count;
+        String countQuery = "SELECT * FROM " + TABLE_PUZZLES + " ORDER BY ID";
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(query,null);
+        Cursor cursor = db.rawQuery(countQuery, null);
+        count = cursor.getCount();
 
-        if(cursor != null)
-        {
-            cursor.moveToFirst();
-        }
-
-        int numberOfPuzzles = cursor.getInt(0);
-
-        db.close();
         cursor.close();
-        return numberOfPuzzles;
+
+        // return count
+        return count;
     }
 
     public ArrayList<SudokuPuzzles> getAllPuzzles()

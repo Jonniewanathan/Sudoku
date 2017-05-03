@@ -1,5 +1,8 @@
 package com.jonniewanathan.sudoku;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -16,25 +19,24 @@ import java.util.ArrayList;
 
 
 
-public class ListViewAdapter extends BaseAdapter {
+public class ListViewAdapter extends ArrayAdapter<String> {
 
     private Context context;
     private ArrayList<String> list;
     private ArrayList<Boolean> played;
     private boolean load;
 
-
-
-
     public ListViewAdapter(Context context, ArrayList<String> list, ArrayList<Boolean> played, boolean load) {
-
-        this.context = context;
+        super(context, 0, list);
+        this.context = super.getContext();
         this.list = list;
         this.played = played;
         this.load = load;
     }
 
-    public View getView(int position, View convertView, ViewGroup parent) {
+    @NonNull
+    @Override
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         TextView textView;
         View gridView;
 
@@ -75,16 +77,5 @@ public class ListViewAdapter extends BaseAdapter {
     public int getCount() {
         return list.size();
     }
-
-    @Override
-    public TextView getItem(int position) {
-        return null;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-
 }
 
