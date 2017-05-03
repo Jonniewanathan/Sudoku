@@ -1,0 +1,90 @@
+package com.jonniewanathan.sudoku;
+
+import android.widget.BaseAdapter;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
+/**
+ * Created by jonathan on 03/05/2017.
+ */
+
+
+
+public class ListViewAdapter extends BaseAdapter {
+
+    private Context context;
+    private ArrayList<String> list;
+    private ArrayList<Boolean> played;
+    private boolean load;
+
+
+
+
+    public ListViewAdapter(Context context, ArrayList<String> list, ArrayList<Boolean> played, boolean load) {
+
+        this.context = context;
+        this.list = list;
+        this.played = played;
+        this.load = load;
+    }
+
+    public View getView(int position, View convertView, ViewGroup parent) {
+        TextView textView;
+        View gridView;
+
+        LayoutInflater inflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        System.out.println(list.get(position));
+
+        if (convertView == null) {
+            gridView = inflater.inflate(R.layout.text_view_temp, null);
+
+            // set value into textview
+            textView = (TextView) gridView.findViewById(R.id.load_puzzle_list);
+
+            textView.setText(list.get(position));
+
+
+            if(played.get(position))
+            {
+                String text = list.get(position) + "Played!";
+                textView.setText(text);
+            }
+            else
+            {
+                textView.setText(list.get(position));
+            }
+            textView.setText(list.get(position));
+        }
+        else
+        {
+            textView = (TextView) convertView;
+        }
+
+        return textView;
+    }
+
+    @Override
+    public int getCount() {
+        return list.size();
+    }
+
+    @Override
+    public TextView getItem(int position) {
+        return null;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return 0;
+    }
+
+}
+

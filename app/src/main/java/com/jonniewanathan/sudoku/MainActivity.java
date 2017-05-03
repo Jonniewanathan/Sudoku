@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         sudokuIntRemoved = copy2dArray(EasyPuzzles.easy2);
 
         if (savedInstanceState != null) {
-            // Restore value of members from saved state
+            // Restore value of Sudoku board from saved state
             sudokuPlayArray = copy2dArray(convertArray2d(savedInstanceState.getIntArray(SUDOKU_PLAY)));
         }
         else {
@@ -80,10 +80,9 @@ public class MainActivity extends AppCompatActivity {
         sudokuBoard = (GridView) findViewById(R.id.sudokuBoard);
 
         textAdapter = new TextAdapter(this,sudokuIntRemoved,sudokuPlayArray,isEditable,textViews);
-        //sudokuBoard.setAdapter(new ImageViewAdapter(this,sudokuIntRemoved));
 
         sudokuBoard.setAdapter(textAdapter);
-        sudokuBoard.setBackgroundColor(Color.DKGRAY);
+        sudokuBoard.setBackgroundColor(Color.BLACK);
 
         one = (Button) findViewById(R.id.button);
         two = (Button) findViewById(R.id.button2);

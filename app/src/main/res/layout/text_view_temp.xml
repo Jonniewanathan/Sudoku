@@ -14,11 +14,14 @@
         android:textSize="15sp"
         android:textColor="#255" />
 
-    <ImageView
-        android:id="@+id/imageView"
+    <TextView
+        android:text="@string/_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/line"/>
+        android:padding="9dp"
+        android:id="@+id/load_puzzle_list"
+        android:textSize="20sp"
+        android:textColor="#255" />
 
 
 </LinearLayout>

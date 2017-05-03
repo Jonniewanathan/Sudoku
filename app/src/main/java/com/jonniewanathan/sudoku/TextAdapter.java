@@ -13,6 +13,8 @@ import android.widget.TextView;
  * Created by jonathan on 02/04/2017.
  */
 
+//https://developer.android.com/guide/topics/ui/layout/gridview.html
+
 public class TextAdapter extends BaseAdapter {
 
     private Context context;
