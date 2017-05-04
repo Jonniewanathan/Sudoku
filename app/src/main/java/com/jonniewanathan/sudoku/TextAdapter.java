@@ -88,10 +88,10 @@ public class TextAdapter extends BaseAdapter {
             }
 
             this.textViews[position] = textView;
-            System.out.println("TextView Position: " + position + " Data: " + textView.getText() + "Values: " + textViewValues[rowPosition][columnPosition] + "Play Values: " + textViewPlayValues[rowPosition][columnPosition]);
-            System.out.println("Position: " + position  + " " + this.textViews[position].getText());
-            System.out.println("editable: " + isEditable[position]);
-            //System.out.println("position 0: " + this.textViews[0].getText());
+//            System.out.println("TextView Position: " + position + " Data: " + textView.getText() + "Values: " + textViewValues[rowPosition][columnPosition] + "Play Values: " + textViewPlayValues[rowPosition][columnPosition]);
+//            System.out.println("Position: " + position  + " " + this.textViews[position].getText());
+//            System.out.println("editable: " + isEditable[position]);
+//            System.out.println("position 0: " + this.textViews[0].getText());
 
             if(position == 0 && count == 0)
             {

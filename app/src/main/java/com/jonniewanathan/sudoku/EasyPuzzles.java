@@ -1,5 +1,7 @@
 package com.jonniewanathan.sudoku;
 
+import java.util.HashMap;
+
 /**
  * Created by jonathan on 07/04/2017.
  */
@@ -7,7 +9,142 @@ package com.jonniewanathan.sudoku;
 public class EasyPuzzles {
 
 
-    int[][] fullEasy1 = {
+    private HashMap<String,int[][]> puzzles = new HashMap<>();
+    private HashMap<String,int[][]> fullPuzzles = new HashMap<>();
+
+    public EasyPuzzles() {
+        this.populatePuzzles();
+    }
+
+    public void populatePuzzles()
+    {
+        this.addPuzzles("easy1",easy1);
+        this.addPuzzles("easy2",easy2);
+        this.addPuzzles("easy3",easy3);
+        this.addPuzzles("easy4",easy4);
+        this.addPuzzles("easy5",easy5);
+        this.addPuzzles("easy6",easy6);
+        this.addPuzzles("easy7",easy7);
+        this.addPuzzles("easy8",easy8);
+        this.addPuzzles("easy9",easy9);
+        this.addPuzzles("easy10",easy10);
+        this.addPuzzles("easy11",easy11);
+        this.addPuzzles("easy12",easy12);
+        this.addPuzzles("easy13",easy13);
+        this.addPuzzles("easy14",easy14);
+        this.addPuzzles("easy15",easy15);
+        this.addPuzzles("easy16",easy16);
+        this.addPuzzles("easy17",easy17);
+        this.addPuzzles("easy18",easy18);
+        this.addPuzzles("easy19",easy19);
+        this.addPuzzles("easy20",easy20);
+        this.addPuzzles("easy21",easy21);
+        this.addPuzzles("easy22",easy22);
+        this.addPuzzles("easy23",easy23);
+        this.addPuzzles("easy24",easy24);
+        this.addPuzzles("easy25",easy25);
+        this.addPuzzles("easy26",easy26);
+        this.addPuzzles("easy27",easy27);
+        this.addPuzzles("easy28",easy28);
+        this.addPuzzles("easy29",easy29);
+        this.addPuzzles("easy30",easy30);
+        this.addPuzzles("easy31",easy31);
+        this.addPuzzles("easy32",easy32);
+        this.addPuzzles("easy33",easy33);
+        this.addPuzzles("easy34",easy34);
+        this.addPuzzles("easy35",easy35);
+        this.addPuzzles("easy36",easy36);
+        this.addPuzzles("easy37",easy37);
+        this.addPuzzles("easy38",easy38);
+        this.addPuzzles("easy39",easy39);
+        this.addPuzzles("easy40",easy40);
+        this.addPuzzles("easy41",easy41);
+        this.addPuzzles("easy42",easy42);
+        this.addPuzzles("easy43",easy43);
+        this.addPuzzles("easy44",easy44);
+        this.addPuzzles("easy45",easy45);
+        this.addPuzzles("easy46",easy46);
+        this.addPuzzles("easy47",easy47);
+        this.addPuzzles("easy48",easy48);
+        this.addPuzzles("easy49",easy49);
+        this.addPuzzles("easy50",easy50);
+        this.addFullPuzzles("easy1",fullEasy1);
+        this.addFullPuzzles("easy2",fullEasy2);
+        this.addFullPuzzles("easy3",fullEasy3);
+        this.addFullPuzzles("easy4",fullEasy4);
+        this.addFullPuzzles("easy5",fullEasy5);
+        this.addFullPuzzles("easy6",fullEasy6);
+        this.addFullPuzzles("easy7",fullEasy7);
+        this.addFullPuzzles("easy8",fullEasy8);
+        this.addFullPuzzles("easy9",fullEasy9);
+        this.addFullPuzzles("easy10",fullEasy10);
+        this.addFullPuzzles("easy11",fullEasy11);
+        this.addFullPuzzles("easy12",fullEasy12);
+        this.addFullPuzzles("easy13",fullEasy13);
+        this.addFullPuzzles("easy14",fullEasy14);
+        this.addFullPuzzles("easy15",fullEasy15);
+        this.addFullPuzzles("easy16",fullEasy16);
+        this.addFullPuzzles("easy17",fullEasy17);
+        this.addFullPuzzles("easy18",fullEasy18);
+        this.addFullPuzzles("easy19",fullEasy19);
+        this.addFullPuzzles("easy20",fullEasy20);
+        this.addFullPuzzles("easy21",fullEasy21);
+        this.addFullPuzzles("easy22",fullEasy22);
+        this.addFullPuzzles("easy23",fullEasy23);
+        this.addFullPuzzles("easy24",fullEasy24);
+        this.addFullPuzzles("easy25",fullEasy25);
+        this.addFullPuzzles("easy26",fullEasy26);
+        this.addFullPuzzles("easy27",fullEasy27);
+        this.addFullPuzzles("easy28",fullEasy28);
+        this.addFullPuzzles("easy29",fullEasy29);
+        this.addFullPuzzles("easy30",fullEasy30);
+        this.addFullPuzzles("easy31",fullEasy31);
+        this.addFullPuzzles("easy32",fullEasy32);
+        this.addFullPuzzles("easy33",fullEasy33);
+        this.addFullPuzzles("easy34",fullEasy34);
+        this.addFullPuzzles("easy35",fullEasy35);
+        this.addFullPuzzles("easy36",fullEasy36);
+        this.addFullPuzzles("easy37",fullEasy37);
+        this.addFullPuzzles("easy38",fullEasy38);
+        this.addFullPuzzles("easy39",fullEasy39);
+        this.addFullPuzzles("easy40",fullEasy40);
+        this.addFullPuzzles("easy41",fullEasy41);
+        this.addFullPuzzles("easy42",fullEasy42);
+        this.addFullPuzzles("easy43",fullEasy43);
+        this.addFullPuzzles("easy44",fullEasy44);
+        this.addFullPuzzles("easy45",fullEasy45);
+        this.addFullPuzzles("easy46",fullEasy46);
+        this.addFullPuzzles("easy47",fullEasy47);
+        this.addFullPuzzles("easy48",fullEasy48);
+        this.addFullPuzzles("easy49",fullEasy49);
+        this.addFullPuzzles("easy50",fullEasy50);
+    }
+
+
+    public void addPuzzles(String arrayName, int[][] puzzle)
+    {
+        puzzles.put(arrayName,puzzle);
+    }
+    public void addFullPuzzles(String arrayName, int[][] puzzle)
+    {
+        fullPuzzles.put(arrayName,puzzle);
+    }
+
+    public int[][] getPuzzle(String key)
+    {
+        return puzzles.get(key);
+    }
+
+    public int[][] getFullPuzzle(String key)
+    {
+        return fullPuzzles.get(key);
+    }
+
+    public HashMap<String, int[][]> getPuzzles() {
+        return puzzles;
+    }
+
+    private int[][] fullEasy1 = {
             {8,3,9,6,2,1,4,5,7,},
             {5,2,6,4,7,9,3,1,8,},
             {1,4,7,8,5,3,2,6,9,},
@@ -20,20 +157,20 @@ public class EasyPuzzles {
     };
 
 
-    int[][] easy1 = {
-            {0,3,9,6,2,1,4,5,0,},
-            {5,2,6,4,0,9,3,1,8,},
-            {0,4,0,8,0,0,0,6,9,},
-            {2,1,8,9,3,0,0,0,6,},
-            {9,0,5,2,1,4,7,8,3,},
-            {0,7,4,5,0,6,0,2,1,},
-            {6,9,0,0,4,0,0,0,5,},
-            {7,0,3,1,0,2,0,9,4,},
-            {4,0,1,7,9,5,6,3,2,}
+    private int[][] easy1 = {
+            {0,0,0,6,2,1,4,5,7,},
+            {5,2,6,4,7,9,3,1,8,},
+            {1,4,7,8,5,3,2,6,9,},
+            {2,1,8,9,3,7,5,4,6,},
+            {9,6,5,2,1,4,7,8,3,},
+            {3,7,4,5,8,6,9,2,1,},
+            {6,9,2,3,4,8,1,7,5,},
+            {7,5,3,1,6,2,8,9,4,},
+            {4,8,1,7,9,5,6,3,2,}
     };
 
 
-    public static int[][] fullEasy2 = {
+    private int[][] fullEasy2 = {
             {1,4,2,3,9,8,5,7,6,},
             {7,3,5,6,4,1,9,2,8,},
             {8,6,9,7,5,2,3,4,1,},
@@ -46,7 +183,7 @@ public class EasyPuzzles {
     };
 
 
-    public static int[][] easy2 = {
+    private int[][] easy2 = {
             {1,4,0,3,0,8,5,0,6,},
             {7,0,5,6,0,1,9,2,0,},
             {8,6,9,7,5,0,3,0,1,},
@@ -59,7 +196,7 @@ public class EasyPuzzles {
     };
 
 
-    int[][] fullEasy3 = {
+    private int[][] fullEasy3 = {
             {6,5,1,4,2,9,8,7,3,},
             {3,4,7,8,6,1,5,9,2,},
             {9,8,2,7,3,5,1,6,4,},

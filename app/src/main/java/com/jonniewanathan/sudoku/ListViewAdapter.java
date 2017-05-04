@@ -8,6 +8,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.lang.reflect.Array;
@@ -38,7 +39,7 @@ public class ListViewAdapter extends ArrayAdapter<String> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         TextView textView;
-        View gridView;
+        View listView;
 
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -46,29 +47,27 @@ public class ListViewAdapter extends ArrayAdapter<String> {
         System.out.println(list.get(position));
 
         if (convertView == null) {
-            gridView = inflater.inflate(R.layout.text_view_temp, null);
+            listView = inflater.inflate(R.layout.text_view_temp, null);
 
             // set value into textview
-            textView = (TextView) gridView.findViewById(R.id.load_puzzle_list);
+            textView = (TextView) listView.findViewById(R.id.load_puzzle_list);
 
-            textView.setText(list.get(position));
-
-
-            if(played.get(position))
-            {
-                String text = list.get(position) + "Played!";
-                textView.setText(text);
-            }
-            else
-            {
-                textView.setText(list.get(position));
-            }
             textView.setText(list.get(position));
         }
         else
         {
             textView = (TextView) convertView;
         }
+        if(played.get(position))
+        {
+            String text = list.get(position) + " Played!";
+            textView.setText(text);
+        }
+        else
+        {
+            textView.setText(list.get(position));
+        }
+
 
         return textView;
     }

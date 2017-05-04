@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context="com.jonniewanathan.sudoku.DifficultyActivity"
     android:orientation="vertical"
-    android:background="@drawable/woodh">
+    android:background="@drawable/wood">
 
 
     <Button

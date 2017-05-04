@@ -1,5 +1,8 @@
 package com.jonniewanathan.sudoku;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,7 +11,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
-
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -23,6 +26,18 @@ public class MainActivity extends AppCompatActivity {
     int position;
     int playRow;
     int playColumn;
+
+    String sudokuArrayName;
+    String difficulty;
+
+    boolean load;
+
+    SharedPreferences sudokuSave;
+    DBHandler dbHandler;
+
+    EasyPuzzles puzzlesE;
+    MediumPuzzles puzzlesM;
+    HardPuzzles puzzlesH;
 
     GridView sudokuBoard;
 
@@ -51,31 +66,61 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        sudokuInt = copy2dArray(EasyPuzzles.fullEasy2);
-        sudokuIntRemoved = copy2dArray(EasyPuzzles.easy2);
+        Intent intent = this.getIntent();
+        dbHandler = new DBHandler(this);
+
+        sudokuSave = getSharedPreferences(MainMenu.PREF_KEY, Context.MODE_PRIVATE);
+
+        sudokuArrayName = intent.getStringExtra(LoadActivity.PUZZLE_KEY);
+        load = intent.getBooleanExtra(LoadActivity.LOAD_KEY,false);
+        difficulty = intent.getStringExtra(LoadActivity.DIFFICULTY_KEY);
+
+        System.out.println("Main " + load);
+        String[] temp = sudokuArrayName.split(" ");
+        sudokuArrayName = temp[0].toLowerCase();
+
+        if(difficulty.equals("E"))
+        {
+            puzzlesE = new EasyPuzzles();
+            sudokuInt = copy2dArray(puzzlesE.getFullPuzzle(sudokuArrayName));
+            sudokuIntRemoved = copy2dArray(puzzlesE.getPuzzle(sudokuArrayName));
+        }
+        else if(difficulty.equals("M"))
+        {
+            puzzlesM = new MediumPuzzles();
+            System.out.println(sudokuArrayName);
+            sudokuInt = copy2dArray(puzzlesM.getFullPuzzle(sudokuArrayName));
+            sudokuIntRemoved = copy2dArray(puzzlesM.getPuzzle(sudokuArrayName));
+        }
+        else
+        {
+            puzzlesH = new HardPuzzles();
+            sudokuInt = copy2dArray(puzzlesH.getFullPuzzle(sudokuArrayName));
+            sudokuIntRemoved = copy2dArray(puzzlesH.getPuzzle(sudokuArrayName));
+        }
 
         if (savedInstanceState != null) {
             // Restore value of Sudoku board from saved state
             sudokuPlayArray = copy2dArray(convertArray2d(savedInstanceState.getIntArray(SUDOKU_PLAY)));
+
         }
-        else {
+        else
+        {
             sudokuPlayArray = copy2dArray(sudokuIntRemoved);
+        }
+        if(load)
+        {
+            //String key = dbHandler.getPuzzleKey(sudokuArrayName);
+            //sudokuPlayArray = copy2dArray(convertTo2dArray(sudokuSave.getString(key,null)));
+            sudokuPlayArray = copy2dArray(loadState());
         }
 
 
 
         setContentView(R.layout.activity_main);
 
-//        sudokuInt = new int[row][column];
-//        sudokuIntRemoved = new int[row][column];
-//        sudokuPlayArray = new int[row][column];
-
         isEditable = new boolean[81];
         textViews = new TextView[81];
-
-//        sudokuInt = EasyPuzzles.fullEasy2.clone();
-//        sudokuIntRemoved = EasyPuzzles.easy2.clone();
-//        sudokuPlayArray = sudokuIntRemoved.clone();
 
         sudokuBoard = (GridView) findViewById(R.id.sudokuBoard);
 
@@ -107,6 +152,14 @@ public class MainActivity extends AppCompatActivity {
                     playRow = position/9;
                     sudokuPlayArray[playRow][playColumn] = 1;
                     currentlySelected.setTextColor(Color.BLACK);
+                    if(!checkCurrentSquare(position,sudokuPlayArray,sudokuInt,textViews))
+                    {
+                        Toast.makeText(MainActivity.this, "Wrong Number!", Toast.LENGTH_SHORT).show();
+                    }
+                    if(fullCompletionCheck(sudokuPlayArray,sudokuInt,textViews,sudokuBoard))
+                    {
+                        Toast.makeText(MainActivity.this, "Completed!!", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
             }
@@ -122,6 +175,14 @@ public class MainActivity extends AppCompatActivity {
                     playRow = position / 9;
                     sudokuPlayArray[playRow][playColumn] = 2;
                     currentlySelected.setTextColor(Color.BLACK);
+                    if(!checkCurrentSquare(position,sudokuPlayArray,sudokuInt,textViews))
+                    {
+                        Toast.makeText(MainActivity.this, "Wrong Number!", Toast.LENGTH_SHORT).show();
+                    }
+                    if(fullCompletionCheck(sudokuPlayArray,sudokuInt,textViews,sudokuBoard))
+                    {
+                        Toast.makeText(MainActivity.this, "Completed!!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -136,6 +197,14 @@ public class MainActivity extends AppCompatActivity {
                     playRow = position / 9;
                     sudokuPlayArray[playRow][playColumn] = 3;
                     currentlySelected.setTextColor(Color.BLACK);
+                    if(!checkCurrentSquare(position,sudokuPlayArray,sudokuInt,textViews))
+                    {
+                        Toast.makeText(MainActivity.this, "Wrong Number!", Toast.LENGTH_SHORT).show();
+                    }
+                    if(fullCompletionCheck(sudokuPlayArray,sudokuInt,textViews,sudokuBoard))
+                    {
+                        Toast.makeText(MainActivity.this, "Completed!!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -150,6 +219,14 @@ public class MainActivity extends AppCompatActivity {
                     playRow = position / 9;
                     sudokuPlayArray[playRow][playColumn] = 4;
                     currentlySelected.setTextColor(Color.BLACK);
+                    if(!checkCurrentSquare(position,sudokuPlayArray,sudokuInt,textViews))
+                    {
+                        Toast.makeText(MainActivity.this, "Wrong Number!", Toast.LENGTH_SHORT).show();
+                    }
+                    if(fullCompletionCheck(sudokuPlayArray,sudokuInt,textViews,sudokuBoard))
+                    {
+                        Toast.makeText(MainActivity.this, "Completed!!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -164,6 +241,14 @@ public class MainActivity extends AppCompatActivity {
                     playRow = position / 9;
                     sudokuPlayArray[playRow][playColumn] = 5;
                     currentlySelected.setTextColor(Color.BLACK);
+                    if(!checkCurrentSquare(position,sudokuPlayArray,sudokuInt,textViews))
+                    {
+                        Toast.makeText(MainActivity.this, "Wrong Number!", Toast.LENGTH_SHORT).show();
+                    }
+                    if(fullCompletionCheck(sudokuPlayArray,sudokuInt,textViews,sudokuBoard))
+                    {
+                        Toast.makeText(MainActivity.this, "Completed!!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -178,6 +263,14 @@ public class MainActivity extends AppCompatActivity {
                     playRow = position / 9;
                     sudokuPlayArray[playRow][playColumn] = 6;
                     currentlySelected.setTextColor(Color.BLACK);
+                    if(!checkCurrentSquare(position,sudokuPlayArray,sudokuInt,textViews))
+                    {
+                        Toast.makeText(MainActivity.this, "Wrong Number!", Toast.LENGTH_SHORT).show();
+                    }
+                    if(fullCompletionCheck(sudokuPlayArray,sudokuInt,textViews,sudokuBoard))
+                    {
+                        Toast.makeText(MainActivity.this, "Completed!!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -192,6 +285,14 @@ public class MainActivity extends AppCompatActivity {
                     playRow = position / 9;
                     sudokuPlayArray[playRow][playColumn] = 7;
                     currentlySelected.setTextColor(Color.BLACK);
+                    if(!checkCurrentSquare(position,sudokuPlayArray,sudokuInt,textViews))
+                    {
+                        Toast.makeText(MainActivity.this, "Wrong Number!", Toast.LENGTH_SHORT).show();
+                    }
+                    if(fullCompletionCheck(sudokuPlayArray,sudokuInt,textViews,sudokuBoard))
+                    {
+                        Toast.makeText(MainActivity.this, "Completed!!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -206,6 +307,14 @@ public class MainActivity extends AppCompatActivity {
                     playRow = position / 9;
                     sudokuPlayArray[playRow][playColumn] = 8;
                     currentlySelected.setTextColor(Color.BLACK);
+                    if(!checkCurrentSquare(position,sudokuPlayArray,sudokuInt,textViews))
+                    {
+                        Toast.makeText(MainActivity.this, "Wrong Number!", Toast.LENGTH_SHORT).show();
+                    }
+                    if(fullCompletionCheck(sudokuPlayArray,sudokuInt,textViews,sudokuBoard))
+                    {
+                        Toast.makeText(MainActivity.this, "Completed!!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -220,6 +329,14 @@ public class MainActivity extends AppCompatActivity {
                     playRow = position / 9;
                     sudokuPlayArray[playRow][playColumn] = 9;
                     currentlySelected.setTextColor(Color.BLACK);
+                    if(!checkCurrentSquare(position,sudokuPlayArray,sudokuInt,textViews))
+                    {
+                        Toast.makeText(MainActivity.this, "Wrong Number!", Toast.LENGTH_SHORT).show();
+                    }
+                    if(fullCompletionCheck(sudokuPlayArray,sudokuInt,textViews,sudokuBoard))
+                    {
+                        Toast.makeText(MainActivity.this, "Completed!!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -234,6 +351,14 @@ public class MainActivity extends AppCompatActivity {
                     playRow = position / 9;
                     sudokuPlayArray[playRow][playColumn] = 0;
                     currentlySelected.setTextColor(Color.BLUE);
+                    if(!checkCurrentSquare(position,sudokuPlayArray,sudokuInt,textViews))
+                    {
+                        Toast.makeText(MainActivity.this, "Wrong Number!", Toast.LENGTH_SHORT).show();
+                    }
+                    if(fullCompletionCheck(sudokuPlayArray,sudokuInt,textViews,sudokuBoard))
+                    {
+                        Toast.makeText(MainActivity.this, "Completed!!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -251,8 +376,6 @@ public class MainActivity extends AppCompatActivity {
 
                 rowPosition = position/9;
                 columnPosition = position%9;
-
-                //System.out.println(position);
 
                 unHighlight();
 
@@ -347,10 +470,31 @@ public class MainActivity extends AppCompatActivity {
                     view.setBackgroundColor(Color.BLUE);
                 }
 
+
+
             }
         });
 
 
+
+
+    }
+
+    public int[][] loadState()
+    {
+        System.out.println("LOADING");
+        return convertTo2dArray(sudokuSave.getString(sudokuArrayName,null));
+
+    }
+
+    public void saveState()
+    {
+        SharedPreferences.Editor editor = sudokuSave.edit();
+        editor.putString(sudokuArrayName,convertToCommaSep(sudokuPlayArray));
+        editor.apply();
+        editor.commit();
+        dbHandler.updatePuzzlePlayed(sudokuArrayName);
+        System.out.println("SAVING!!!");
     }
 
     public void highLightRows(int position)
@@ -513,11 +657,49 @@ public class MainActivity extends AppCompatActivity {
         return array;
     }
 
+    public static boolean fullCompletionCheck(int[][] play,int[][] complete,TextView[] textViews,GridView gridView)
+    {
+        int count = 0;
+
+        for (int i = 0; i < play.length; i++) {
+            for (int j = 0; j < play[0].length; j++) {
+
+                if(play[i][j] != complete[i][j])
+                {
+                    System.out.println("Play: " + play[i][j]);
+                    System.out.println("Complete: " + complete[i][j]);
+                    return false;
+                }
+                count++;
+            }
+        }
+        gridView.setOnItemClickListener(null);
+        return true;
+    }
+
+    public static boolean checkCurrentSquare(int position,int[][] play,int[][] full, TextView[] textViews)
+    {
+        int row = position/9;
+        int col = position%9;
+
+
+        if(play[row][col] != full[row][col])
+        {
+            if(play[row][col] != 0)
+            {
+                textViews[position].setBackgroundColor(Color.MAGENTA);
+                textViews[position].setTextColor(Color.BLACK);
+            }
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
 
         savedInstanceState.putIntArray(SUDOKU_PLAY,convertArray(sudokuPlayArray));
-
+        saveState();
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -526,5 +708,57 @@ public class MainActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
 
         sudokuPlayArray = copy2dArray(convertArray2d(savedInstanceState.getIntArray(SUDOKU_PLAY)));
+        if(load)
+        {
+            sudokuPlayArray = copy2dArray(loadState());
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        saveState();
+        super.onBackPressed();
+
+    }
+
+    @Override
+    protected void onPause() {
+        saveState();
+        super.onPause();
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if(load)
+        {
+            sudokuPlayArray = copy2dArray(loadState());
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        saveState();
+        super.onStop();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(load)
+        {
+            sudokuPlayArray = copy2dArray(loadState());
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(load)
+        {
+            sudokuPlayArray = copy2dArray(loadState());
+        }
     }
 }
