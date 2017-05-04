@@ -351,10 +351,6 @@ public class MainActivity extends AppCompatActivity {
                     playRow = position / 9;
                     sudokuPlayArray[playRow][playColumn] = 0;
                     currentlySelected.setTextColor(Color.BLUE);
-                    if(!checkCurrentSquare(position,sudokuPlayArray,sudokuInt,textViews))
-                    {
-                        Toast.makeText(MainActivity.this, "Wrong Number!", Toast.LENGTH_SHORT).show();
-                    }
                     if(fullCompletionCheck(sudokuPlayArray,sudokuInt,textViews,sudokuBoard))
                     {
                         Toast.makeText(MainActivity.this, "Completed!!", Toast.LENGTH_SHORT).show();

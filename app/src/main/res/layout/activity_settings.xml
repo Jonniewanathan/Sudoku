@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context="com.jonniewanathan.sudoku.SettingsActivity"
     android:orientation="vertical"
-    android:background="@drawable/woodh">
+    android:background="@color/colorLightGrey">
 
 
     <Switch
@@ -44,7 +44,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
         android:layout_weight="1"
-        android:text="@string/reset_all_puzzles"/>
+        android:text="@string/reset_all_puzzles"
+        android:layout_marginBottom="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:padding="5dp"
+        android:background="@drawable/border"/>
 </LinearLayout>

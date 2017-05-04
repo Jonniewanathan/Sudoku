@@ -7,24 +7,48 @@
     android:layout_height="match_parent"
     tools:context="com.jonniewanathan.sudoku.DifficultyActivity"
     android:orientation="vertical"
-    android:background="@drawable/woodh">
+    android:background="@color/colorLightGrey">
 
 
     <Button
         android:id="@+id/easy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/easy"/>
+        android:text="@string/easy"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:padding="5dp"
+        android:background="@drawable/border"/>
 
     <Button
         android:id="@+id/medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/medium"/>
+        android:text="@string/medium"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:padding="5dp"
+        android:background="@drawable/border"/>
 
     <Button
         android:id="@+id/hard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hard"/>
+        android:text="@string/hard"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:padding="5dp"
+        android:background="@drawable/border"/>
 </LinearLayout>

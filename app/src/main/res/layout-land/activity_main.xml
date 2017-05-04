@@ -10,7 +10,7 @@
               android:paddingLeft="0dp"
               android:paddingRight="0dp"
               android:paddingTop="0dp"
-              android:background="@drawable/wood"
+              android:background="@color/colorLightGrey"
     tools:context="com.jonniewanathan.sudoku.MainActivity"
     >
 
